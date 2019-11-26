@@ -1,0 +1,119 @@
+<html>
+
+<head>
+  <script type="text/javascript" src="camon.js"></script>
+  <script>
+    function add_row(type) {
+      var table = document.getElementById(type + "-table");
+      var tr = table.getElementsByClassName('row-0')[0].cloneNode(true);
+      var inputs = [...tr.getElementsByTagName("input")];
+      inputs.forEach(element => element.value = "");
+      table.appendChild(tr);
+    }
+
+    function get_row_data(row, key = parseFloat) {
+      var data = [];
+      var inputs = [...row.getElementsByTagName("input")];
+      inputs.forEach(e => {
+        data.push(key(e.value) || 0)
+      })
+      return data
+    }
+
+    function get_data(type) {
+      var table = document.getElementById(type + "-table");
+      var rows = [...table.getElementsByClassName(type + "-input-row")];
+      data = rows.map(r => get_row_data(r))
+      console.log(data);
+      return data;
+    }
+
+    function am_tips() {
+      return parseFloat(document.getElementById("am-tips").value) || 0;
+    }
+
+    function show_calculate() {
+      var [totalCash1, Total, CashforCamon] = calculate(get_data('pos'), get_data('bar'), am_tips());
+      document.getElementById("totalcash1-result").innerHTML = totalCash1;
+      document.getElementById("total-result").innerHTML = Total;
+      document.getElementById("cashforcamon-result").innerHTML = CashforCamon;
+    }
+
+    window.onload = () => {
+      for (var i = 0; i < 20; i++) {
+        add_row('pos');
+        add_row('bar');
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Title</h1>
+  <div>
+    <h2>POS</h2>
+    <table id="pos-table">
+      <tr>
+        <th>Credit</th>
+        <th>Cash</th>
+        <th>Credit tips</th>
+        <th>Cash tips</th>
+      </tr>
+      <tr class="pos-input-row row-0">
+        <td>
+          <input type="text" class="pos-credit">
+        </td>
+        <td>
+          <input type="text" class="pos-cash">
+        </td>
+        <td>
+          <input type="text" class="pos-credit-tips">
+        </td>
+        <td>
+          <input type="text" class="pos-cash-tips">
+        </td>
+      </tr>
+    </table>
+    <button id="pos-add-button" onclick="add_row('pos')">+</button>
+  </div>
+  <div>
+    <h2>Bar</h2>
+    <table id="bar-table">
+      <tr>
+        <th>Credit</th>
+        <th>Cash</th>
+        <th>Credit tips</th>
+        <th>Cash tips</th>
+      </tr>
+      <tr class="bar-input-row row-0">
+        <td>
+          <input type="text" class="bar-credit">
+        </td>
+        <td>
+          <input type="text" class="bar-cash">
+        </td>
+        <td>
+          <input type="text" class="bar-credit-tips">
+        </td>
+        <td>
+          <input type="text" class="bar-cash-tips">
+        </td>
+      </tr>
+    </table>
+    <button id="bar-add-button" onclick="add_row('bar')">+</button>
+  </div>
+  <div>
+    <h2>AM Tips</h2>
+    <input type="text" id="am-tips">
+  </div>
+  <div>
+    <button onclick="show_calculate()">Calculate</button>
+  </div>
+  <div>
+    <span>Total Cash: </span><span id="totalcash1-result"></span><br />
+    <span>Total: </span><span id="total-result"></span><br />
+    <span>Cash for Camon: </span><span id="cashforcamon-result"></span><br />
+  </div>
+</body>
+
+</html>
